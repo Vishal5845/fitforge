@@ -1,16 +1,14 @@
 "use client";
 
-const days = [
-  { day: "Mon", completed: true },
-  { day: "Tue", completed: true },
-  { day: "Wed", completed: false },
-  { day: "Thu", completed: true },
-  { day: "Fri", completed: true },
-  { day: "Sat", completed: false },
-  { day: "Sun", completed: false },
-];
+import { WeeklyActivityItem } from "@/lib/api/progress";
 
-export default function WeeklyActivity() {
+interface WeeklyActivityProps {
+  days: WeeklyActivityItem[];
+}
+
+export default function WeeklyActivity({
+  days,
+}: WeeklyActivityProps) {
   return (
     <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
       <h2 className="mb-5 text-xl font-bold text-slate-900 sm:mb-6 sm:text-2xl">

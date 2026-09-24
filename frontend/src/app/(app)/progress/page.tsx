@@ -88,7 +88,9 @@ export default function ProgressPage() {
             icon={<Target className="h-6 w-6" />}
           />
         </div>
-        <WeeklyActivity />
+        <WeeklyActivity
+          days={stats?.weekly_activity ?? []}
+        />
         <Achievements
           totalWorkouts={stats?.total_workouts ?? 0}
           currentStreak={stats?.current_streak ?? 0}

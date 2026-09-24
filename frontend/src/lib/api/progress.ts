@@ -1,10 +1,16 @@
 import { API_BASE_URL } from "./config";
 
+export interface WeeklyActivityItem {
+  day: string;
+  completed: boolean;
+}
+
 export interface ProgressStats {
   current_streak: number;
   total_workouts: number;
   total_minutes: number;
   total_exercises: number;
+  weekly_activity: WeeklyActivityItem[];
 }
 
 export async function getProgress(
