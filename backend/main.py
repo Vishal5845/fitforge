@@ -20,6 +20,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:3000",
         "https://fitforge-cyan-alpha.vercel.app",
+        "https://fitforge-e3qtjdlmr-vishal5845s-projects.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
