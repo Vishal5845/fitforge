@@ -7,6 +7,7 @@ from src.models.auth import (
 from src.services.subscription_service import create_subscription
 # from src.services.email_service import send_otp_email
 from src.config.database import db
+from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import uuid
@@ -257,7 +258,6 @@ def register(user: RegisterUser):
 
 @router.post("/login")
 def login(data: dict):
-
     auth_user = db["users_auth"].find_one(
         {"email": data["email"]}
     )
@@ -282,6 +282,25 @@ def login(data: dict):
         {"user_id": auth_user["user_id"]},
         {"_id": 0}
     ) or {}
+    
+    # Record today's login activity
+    now = datetime.now(timezone.utc)
+    today = now.date().isoformat()
+
+    db["login_activity"].update_one(
+        {
+            "user_id": auth_user["user_id"],
+            "activity_date": today,
+        },
+        {
+            "$set": {
+                "user_id": auth_user["user_id"],
+                "activity_date": today,
+                "last_login_at": now,
+            }
+        },
+        upsert=True,
+    )
     return {
         "user_id": auth_user["user_id"],
         "email": auth_user["email"],

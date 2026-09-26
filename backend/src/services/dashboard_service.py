@@ -38,21 +38,36 @@ def get_dashboard_stats(user_id: str):
         for item in today_workouts
     )
     # Calculate current streak
+        # Calculate login streak
     current_streak = 0
 
-    if history:
-        expected_date = today
-        completed_days = {
-            workout["completed_at"].date()
-            for workout in history
-            if workout.get("completed_at")
-        }
+    login_history = list(
+        db["login_activity"]
+        .find(
+            {"user_id": user_id},
+            {"_id": 0, "activity_date": 1}
+        )
+        .sort("activity_date", -1)
+    )
 
-        # If the user hasn't worked out today,
-        # start checking from yesterday.
-        if expected_date not in completed_days:
+    login_dates = {
+        datetime.strptime(
+            item["activity_date"],
+            "%Y-%m-%d"
+        ).date()
+        for item in login_history
+        if item.get("activity_date")
+    }
+
+    if login_dates:
+        expected_date = today
+
+        # If the user hasn't logged in today,
+        # continue the streak from yesterday.
+        if expected_date not in login_dates:
             expected_date -= timedelta(days=1)
-        while expected_date in completed_days:
+
+        while expected_date in login_dates:
             current_streak += 1
             expected_date -= timedelta(days=1)
 
